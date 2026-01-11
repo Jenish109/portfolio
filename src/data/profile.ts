@@ -15,6 +15,7 @@ export const profile = {
   email: "jenisvaghasiya09@gmail.com",
   github: "https://github.com/Jenish109",
   linkedin: "https://www.linkedin.com/in/jenish-vaghasiya09",
+  upwork: "https://www.upwork.com/freelancers/~010ef1b96d976da384?mp_source=share",
   twitter: "",
   
   // Resume - Updated to new filename

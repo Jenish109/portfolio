@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft, Github, Linkedin, Mail, FolderKanban } from "lucide-react";
+import { ChevronRight, ChevronLeft, Github, Linkedin, Mail, FolderKanban, Briefcase } from "lucide-react";
 import { useChat } from "@/context/ChatProvider";
 import { profile } from "@/data/profile";
 
@@ -226,6 +226,35 @@ export function ContextPanel() {
                   >
                     <Linkedin style={{ width: "16px", height: "16px" }} />
                     LinkedIn
+                  </a>
+                )}
+                {profile.upwork && (
+                  <a
+                    href={profile.upwork}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "8px 12px",
+                      fontSize: "14px",
+                      color: "var(--text-muted)",
+                      textDecoration: "none",
+                      borderRadius: "8px",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "var(--text-primary)";
+                      e.currentTarget.style.backgroundColor = "var(--bg-input)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "var(--text-muted)";
+                      e.currentTarget.style.backgroundColor = "transparent";
+                    }}
+                  >
+                    <Briefcase style={{ width: "16px", height: "16px" }} />
+                    Upwork
                   </a>
                 )}
                 {profile.email && (

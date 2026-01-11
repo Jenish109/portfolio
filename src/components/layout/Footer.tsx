@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, Briefcase } from "lucide-react";
 import { profile } from "@/data/profile";
 import { cn } from "@/lib/utils";
 
@@ -46,6 +46,17 @@ export function Footer({ className }: FooterProps) {
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-4 w-4" />
+              </a>
+            )}
+            {profile.upwork && (
+              <a
+                href={profile.upwork}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[rgb(var(--color-muted-foreground))] hover:text-[rgb(var(--color-foreground))] transition-colors"
+                aria-label="Upwork"
+              >
+                <Briefcase className="h-4 w-4" />
               </a>
             )}
             {profile.email && (
