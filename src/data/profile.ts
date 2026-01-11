@@ -12,7 +12,7 @@ export const profile = {
   phone: "+91 97249 92568",
   
   // Contact & Social
-  email: "jenishvaghasiya509@gmail.com",
+  email: "jenisvaghasiya09@gmail.com",
   github: "https://github.com/Jenish109",
   linkedin: "https://www.linkedin.com/in/jenish-vaghasiya09",
   twitter: "",
@@ -63,19 +63,24 @@ export const experience = [
 // Projects for resume
 export const resumeProjects = [
   {
-    title: "Daily Todo - Stay Organized",
-    description: "Built a dynamic To-Do app with folder/file/task creation, drag-and-drop, and offline support using AsyncStorage.",
-    technologies: ["React Native", "NodeJS", "Redux", "API Integration"],
+    title: "AU Chat App",
+    description: "Organizational communication platform with real-time messaging, file sharing, and multi-organization support.",
+    technologies: ["React Native", "Node.js", "MongoDB", "Socket.io", "Redux"],
   },
   {
-    title: "AllrangeKit",
-    description: "Developed a fully functional kit purchase flow integrating Stripe and PayPal payment gateways.",
-    technologies: ["React Native", "Redux", "Stripe", "PayPal"],
+    title: "Trustbox",
+    description: "Cloud-based file storage system with multi-role access control, secure file sharing, and AWS S3 integration.",
+    technologies: ["ReactJS", "Node.js", "MongoDB", "AWS S3", "REST API"],
   },
   {
-    title: "Face Recognition (R&D)",
-    description: "Integrated AWS Rekognition for real-time face identification from pre-fed data.",
-    technologies: ["React Native", "AWS Rekognition"],
+    title: "ALLrangeKit",
+    description: "E-commerce platform with integrated Stripe and PayPal payment gateways for seamless kit purchases.",
+    technologies: ["React Native", "Redux", "Stripe", "PayPal", "Node.js"],
+  },
+  {
+    title: "Expense Tracker",
+    description: "Cross-platform expense management application with web, mobile app, and backend API for financial tracking.",
+    technologies: ["React Native", "ReactJS", "Node.js", "MongoDB", "Redux"],
   },
 ];
 

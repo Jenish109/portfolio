@@ -45,7 +45,7 @@ function generateResponse(message: string, sentiment: SentimentResult): string {
 
   // Check for common queries and generate appropriate responses
   if (lowerMessage.includes('work') || lowerMessage.includes('project') || lowerMessage.includes('portfolio')) {
-    return "I'd be happy to show you my work! I've worked on several projects including a multi-role platform at Trustbox Cloud, Society Management apps, and various React Native applications. Would you like to see my projects or learn about specific technologies I've used?";
+    return "I'd be happy to show you my work! I've built several projects including AU Chat App (organizational communication platform), Trustbox (cloud-based file storage system), ALLrangeKit (e-commerce with payment integration), and Expense Tracker (cross-platform finance app). Would you like to see my projects or learn about specific technologies I've used?";
   }
 
   if (lowerMessage.includes('skill') || lowerMessage.includes('tech') || lowerMessage.includes('stack')) {

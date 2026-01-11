@@ -28,9 +28,9 @@ export function ChatContainer() {
   }, [messages, isTyping, showSkills, showProjects, showContact]);
 
   return (
-    <div className="flex flex-col" style={{ height: "100%", overflow: "hidden" }}>
+    <div className="flex flex-col h-full">
       {/* Messages area */}
-      <div className="flex-1" style={{ overflowY: "auto", overflowX: "hidden" }}>
+      <div className="flex-1 overflow-y-auto">
         <div 
           style={{
             maxWidth: "800px",
