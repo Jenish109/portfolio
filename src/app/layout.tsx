@@ -1,26 +1,23 @@
 import type { Metadata } from "next";
-import { Syne, Inter, JetBrains_Mono } from "next/font/google";
+import { Roboto_Mono, Anonymous_Pro } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeProvider";
 import { ChatProvider } from "@/context/ChatProvider";
 import { profile } from "@/data/profile";
 
-const syne = Syne({
-  variable: "--font-syne",
+const robotoMono = Roboto_Mono({
+  variable: "--font-roboto-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const anonymousPro = Anonymous_Pro({
+  variable: "--font-anonymous-pro",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -50,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${syne.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${robotoMono.variable} ${anonymousPro.variable} antialiased`}
       >
         <ThemeProvider defaultTheme="dark">
           {/* Noise Overlay for texture */}

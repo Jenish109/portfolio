@@ -9,6 +9,7 @@ import {
   useRef,
   type ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 import {
   chatFlow,
   getInitialNode,
@@ -142,6 +143,7 @@ interface ChatProviderProps {
 export function ChatProvider({ children }: ChatProviderProps) {
   const [state, dispatch] = useReducer(chatReducer, getInitialState());
   const messagesRef = useRef<Message[]>([]);
+  const router = useRouter();
 
   // Keep ref in sync
   useEffect(() => {
@@ -299,6 +301,40 @@ export function ChatProvider({ children }: ChatProviderProps) {
       // Handle download resume action
       if (reply?.action === "downloadResume") {
         window.open(profile.resumeUrl, "_blank");
+        // Add user message
+        dispatch({
+          type: "ADD_MESSAGE",
+          message: {
+            id: generateMessageId(),
+            role: "user",
+            content: text,
+          },
+        });
+        // Add confirmation message
+        dispatch({
+          type: "ADD_MESSAGE",
+          message: {
+            id: generateMessageId(),
+            role: "assistant",
+            content: "I've opened my resume for you! 📄 Is there anything else you'd like to know?",
+          },
+        });
+        return;
+      }
+
+      // Handle navigate action (e.g., navigate to resume page)
+      if (reply?.action === "navigate" && reply?.actionPayload) {
+        // Add user message
+        dispatch({
+          type: "ADD_MESSAGE",
+          message: {
+            id: generateMessageId(),
+            role: "user",
+            content: text,
+          },
+        });
+        // Navigate to the route
+        router.push(reply.actionPayload);
         return;
       }
 
@@ -318,7 +354,7 @@ export function ChatProvider({ children }: ChatProviderProps) {
         addAssistantMessages(nextNode);
       }
     },
-    [state.isTyping, state.currentNodeId, addAssistantMessages]
+    [state.isTyping, state.currentNodeId, addAssistantMessages, router]
   );
 
   // Send free text - now uses AI!

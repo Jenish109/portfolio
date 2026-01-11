@@ -13,14 +13,21 @@ export default function ChatPage() {
       <TopBar />
       
       {/* Main content with proper spacing below fixed header */}
-      <main className="flex flex-1 mt-16">
+      <main 
+        className="flex flex-1" 
+        style={{ 
+          marginTop: "64px",
+          height: "calc(100vh - 64px)",
+          overflow: "hidden",
+        }}
+      >
         {/* Chat area */}
-        <div className="flex-1 min-h-[calc(100vh-64px)]">
+        <div className="flex-1" style={{ height: "100%", overflow: "hidden" }}>
           <ChatContainer />
         </div>
 
         {/* Context panel - desktop only */}
-        <div className="relative hidden lg:block">
+        <div className="relative hidden lg:block" style={{ height: "100%", overflow: "hidden" }}>
           <ContextPanel />
         </div>
       </main>

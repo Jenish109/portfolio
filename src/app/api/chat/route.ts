@@ -1,93 +1,80 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "AIzaSyDBMAH7KYjx-MiizMxjXid-eyhBbM8haPM");
+// Dynamic import for transformers to avoid SSR issues
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let pipeline: any = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let pipelinePromise: Promise<any> | null = null;
 
-// Portfolio context for the AI
-const PORTFOLIO_CONTEXT = `
-You are Jenish Vaghasiya's AI assistant on his portfolio website. You should respond as if you are representing Jenish in a friendly, professional manner.
+async function getPipeline() {
+  if (pipeline) return pipeline;
+  
+  if (!pipelinePromise) {
+    pipelinePromise = import('@xenova/transformers').then((module) => {
+      return module.pipeline('sentiment-analysis', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english');
+    });
+  }
+  
+  pipeline = await pipelinePromise;
+  return pipeline;
+}
 
-## About Jenish Vaghasiya
-- Full Stack Developer based in Gujarat, India
-- Phone: +91 97249 92568
-- Email: jenisvaghasiya09@gmail.com
-- LinkedIn: linkedin.com/in/jenish-vaghasiya
-- GitHub: github.com/jenishvaghasiya
+// Singleton pattern to ensure the pipeline is loaded only once
+class ChatPipeline {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static instance: any = null;
 
-## Skills
-- Programming Languages: JavaScript/TypeScript, SQL, C, C++, HTML/CSS
-- Frontend: React Native, ReactJS, Redux, React Navigation, Tailwind CSS
-- Backend: Node.js, REST APIs, MongoDB, MySQL
-- Cloud & Services: AWS service integration (including AWS Rekognition)
-- Tools: Git, VS Code, MS Office, OneSignal, Zoho API integration
+  static async getInstance() {
+    if (this.instance === null) {
+      this.instance = await getPipeline();
+    }
+    return this.instance;
+  }
+}
 
-## Work Experience
+// Sentiment result type
+interface SentimentResult {
+  label: string;
+  score: number;
+}
 
-### Freelancer at Trustbox Cloud (Feb 2025 - Current)
-- Technologies: ReactJS, NodeJS, MongoDB, REST API, AWS, iFrame
-- Developed a scalable multi-role platform with Super Admin, Client Admin, and User dashboards for managing branded video campaigns
-- Enabled Client Admins to configure user rights, create campaigns, upload videos, and customize video player themes per campaign type
-- Built real-time analytics (views, clicks, shares)
-- Integrated iframe-based video embedding with dynamic user panels
+// Simple response generator based on sentiment and portfolio context
+function generateResponse(message: string, sentiment: SentimentResult): string {
+  const lowerMessage = message.toLowerCase();
+  const isPositive = sentiment.label === 'POSITIVE' || sentiment.score > 0.5;
 
-### Web Developer at Digitattva Technolabs (Jan 2024 – Feb 2025)
-- Technologies: React Native, JavaScript, TypeScript, Redux, React Navigation, Axios, Tailwind CSS, AsyncStorage, OneSignal, Zoho API
-- Worked on Jain Panchang, Society Management, and Certified Backflow Jobs projects
-- Developed Society Management app suite (User, Gatekeeper, Manager) with QR code scanning, real-time alerts via OneSignal, visitor access management
-- Implemented Certified Backflow Jobs app with offline-first support using AsyncStorage
-- Integrated Zoho APIs for job scheduling
+  // Check for common queries and generate appropriate responses
+  if (lowerMessage.includes('work') || lowerMessage.includes('project') || lowerMessage.includes('portfolio')) {
+    return "I'd be happy to show you my work! I've worked on several projects including a multi-role platform at Trustbox Cloud, Society Management apps, and various React Native applications. Would you like to see my projects or learn about specific technologies I've used?";
+  }
 
-### ReactJS Developer at Softnoesis (Jul 2023 – Aug 2023)
-- Technologies: ReactJS, JavaScript, CSS, Responsive Design
-- Built a fully responsive Real Estate website using ReactJS
-- Applied responsive UI design with efficient API integration
+  if (lowerMessage.includes('skill') || lowerMessage.includes('tech') || lowerMessage.includes('stack')) {
+    return "I specialize in Full Stack Development with React Native, ReactJS, Node.js, MongoDB, and AWS services. I have experience building scalable platforms, mobile applications, and RESTful APIs. What specific skills or technologies would you like to know more about?";
+  }
 
-## Projects
+  if (lowerMessage.includes('experience') || lowerMessage.includes('background') || lowerMessage.includes('journey')) {
+    return "I'm a Full Stack Developer with experience at Trustbox Cloud (current), Digitattva Technolabs, and Softnoesis. I've worked on various projects ranging from video campaign platforms to mobile apps with offline support. I'd love to share more about my experience!";
+  }
 
-### Daily Todo - Stay Organized
-- Tech: React Native, NodeJS, Redux, API Integration
-- Built a dynamic To-Do app with folder/file/task creation, drag-and-drop, and multi-tab home screen
-- Full offline support using AsyncStorage with seamless offline-to-online sync
-- Task tracking (Ongoing/Completed) with local storage and real-time updates
+  if (lowerMessage.includes('contact') || lowerMessage.includes('hire') || lowerMessage.includes('email')) {
+    return "Great to hear from you! You can reach me at jenisvaghasiya09@gmail.com or call +91 97249 92568. I'm open to full-time opportunities and freelance projects. Let's discuss how I can help with your project!";
+  }
 
-### AllrangeKit
-- Tech: React Native, Redux, Stripe, PayPal
-- Developed a fully functional kit purchase flow integrating Stripe and PayPal payment gateways
-- Implemented Redux state management and app-level caching for performance optimization
-- RESTful API integration for seamless data exchange
+  if (lowerMessage.includes('resume') || lowerMessage.includes('cv')) {
+    return "You can download my resume from the resume page! It includes my complete work experience, education, skills, and certifications. Is there anything specific you'd like to know about my background?";
+  }
 
-### Face Recognition (R&D)
-- Tech: React Native, AWS Rekognition
-- Integrated AWS Rekognition to upload and annotate images for building a searchable face dataset
-- Real-time face identification that returns matched IDs from pre-fed data
-- Multi-face detection and recognition in a single image
+  // Default response based on sentiment
+  if (isPositive) {
+    return "Thank you for your interest! I'm Jenish Vaghasiya, a Full Stack Developer. I'd be happy to tell you more about my work, skills, or projects. What would you like to know?";
+  }
 
-## Education
-- Bachelor of Computer Engineering from Sarvajanik College of Engineering, Surat (Aug 2020 – Jul 2024)
-- Higher Secondary from P.P. Savani Vidhyabhavan, Surat (Aug 2018 – Jul 2020)
-
-## Certifications
-- Complete Full Stack Web Development Course from Udemy
-- Google Cloud Engineering and Machine Learning track program
-
-## Availability
-- Open to full-time opportunities
-- Available for freelance projects
-
-## Guidelines for responses:
-1. Be friendly, professional, and conversational
-2. If asked about Jenish's work, skills, or experience - provide accurate information from the context above
-3. If asked about specific projects - share details about the relevant project
-4. If asked to schedule a meeting or contact - provide email (jenisvaghasiya09@gmail.com) and phone (+91 97249 92568)
-5. If asked about things completely unrelated to Jenish's portfolio (like general knowledge, other people, news, etc.), politely redirect the conversation back to the portfolio by saying something like: "I'm Jenish's portfolio assistant, so I'm best at answering questions about his work, skills, and experience. Is there something specific about Jenish you'd like to know?"
-6. Keep responses concise but informative (2-4 sentences usually)
-7. Use a friendly tone with occasional emojis when appropriate
-8. If asked about pricing or rates, mention that Jenish is open to discussing project requirements and rates on a case-by-case basis
-`;
+  return "I'm here to help you learn more about Jenish's work and experience. Feel free to ask about projects, skills, or how to get in touch!";
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const { message, conversationHistory } = await request.json();
+    const { message } = await request.json();
 
     if (!message || typeof message !== "string") {
       return NextResponse.json(
@@ -96,36 +83,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build the conversation context
-    const conversationContext = conversationHistory
-      ? conversationHistory
-          .slice(-10) // Keep last 10 messages for context
-          .map((msg: { role: string; content: string }) => 
-            `${msg.role === "user" ? "User" : "Assistant"}: ${msg.content}`
-          )
-          .join("\n")
-      : "";
+    // Try to get sentiment analysis, but fallback if it fails
+    let sentiment: SentimentResult = { label: "POSITIVE", score: 0.7 };
+    
+    try {
+      const classifier = await ChatPipeline.getInstance();
+      const sentimentResult = await classifier(message);
+      sentiment = Array.isArray(sentimentResult) 
+        ? (sentimentResult[0] as SentimentResult)
+        : (sentimentResult as SentimentResult);
+    } catch (sentimentError) {
+      console.warn("Sentiment analysis failed, using default:", sentimentError);
+      // Continue with default sentiment
+    }
 
-    const prompt = `${PORTFOLIO_CONTEXT}
-
-## Previous conversation:
-${conversationContext}
-
-## Current user message:
-User: ${message}
-
-## Your response (as Jenish's portfolio assistant):`;
-
-    // Get the generative model
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const aiResponse = response.text() || "I apologize, but I couldn't generate a response. Please try again!";
+    // Generate response based on sentiment and message content
+    const aiResponse = generateResponse(message, sentiment);
 
     return NextResponse.json({ 
       response: aiResponse,
-      success: true 
+      success: true,
+      sentiment: sentiment
     });
 
   } catch (error) {

@@ -12,9 +12,9 @@ export const profile = {
   phone: "+91 97249 92568",
   
   // Contact & Social
-  email: "jenisvaghasiya09@gmail.com",
-  github: "https://github.com/jenishvaghasiya",
-  linkedin: "https://www.linkedin.com/in/jenish-vaghasiya",
+  email: "jenishvaghasiya509@gmail.com",
+  github: "https://github.com/Jenish109",
+  linkedin: "https://www.linkedin.com/in/jenish-vaghasiya09",
   twitter: "",
   
   // Resume - Updated to new filename

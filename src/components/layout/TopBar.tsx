@@ -7,6 +7,7 @@ import { FolderKanban, FileText, RotateCcw, Menu, X, Moon, Sun } from "lucide-re
 import { useChat } from "@/context/ChatProvider";
 import { useTheme } from "@/context/ThemeProvider";
 import { profile } from "@/data/profile";
+import { AnimatedLogo } from "@/components/ui/AnimatedLogo";
 
 export function TopBar() {
   const { restart } = useChat();
@@ -67,17 +68,7 @@ export function TopBar() {
           }}
         >
           {/* Logo */}
-          <Link 
-            href="/" 
-            style={{
-              fontSize: "20px",
-              fontWeight: 700,
-              textDecoration: "none",
-            }}
-          >
-            <span style={{ color: "#ff4d00" }}>{profile.name[0]}</span>
-            <span style={{ color: theme === "dark" ? "#ffffff" : "#0a0a0a" }}>{profile.name.slice(1)}</span>
-          </Link>
+          <AnimatedLogo name={profile.name} href="/" />
 
           {/* Desktop Nav */}
           {!isMobile && (
