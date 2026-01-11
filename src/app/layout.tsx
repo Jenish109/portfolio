@@ -32,6 +32,10 @@ export const metadata: Metadata = {
     "Web Development",
   ],
   authors: [{ name: profile.name }],
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
   openGraph: {
     title: `${profile.name} | ${profile.role}`,
     description: profile.tagline,
